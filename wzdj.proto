@@ -1,0 +1,2177 @@
+syntax = "proto3";
+package proto;
+
+option java_multiple_files = true;
+option java_package = "com.dmx.pb.wzdj";
+option java_outer_classname = "wzdj";
+
+
+message AchieveInfo {
+    int32 achieveId = 1;
+    int32 stage = 2;
+    int64 progress = 3;
+}
+
+message RpcServerAchieveInfo {
+}
+
+message RpcClientAchieveInfo {
+    repeated AchieveInfo achieveList = 1;
+}
+
+message RpcClientOneAchieveInfo {
+    AchieveInfo achieveInfo = 1;
+}
+
+
+message ItemInfo {
+    string itemId = 1;
+    int64 amount = 2;
+    int64 expired = 3;
+}
+
+message RewardInfo {
+    string itemId = 1;
+    int64 amount = 2;
+    bool isNew = 3;
+}
+
+message PackInfo {
+    string itemId = 1;
+    repeated RewardInfo rewards = 2;
+}
+
+message RpcClientItemList {
+    repeated ItemInfo items = 1;
+}
+
+message RpcClientItemOne {
+    ItemInfo item = 1;
+}
+
+message RpcServerItemUse {
+    string itemId = 1;
+    int64 amount = 2;
+}
+
+message RpcServerItemManySelectOne {
+    string item = 1;
+    repeated string select = 2;
+}
+
+message RpcClientCommonRewardAdd {
+    repeated RewardInfo rewards = 1;
+    repeated PackInfo packs = 2;
+    int32 reason = 3;
+    repeated string reasonParam = 4;
+}
+
+message RpcClientEnergy {
+    int32 energy = 1;
+    int32 next = 2;
+}
+
+
+message RpcClientFirstPayGiftInfo {
+    bool isBuyed = 1;
+}
+
+message FirstRechargeGiftData {
+    string id = 1;
+    bool buy = 2;
+    map<int32, int32> dayMap = 3;
+}
+
+message RpcServerFirstRechargeGiftGet {
+    string id = 1;
+}
+
+message RpcClientFirstRechargeGiftAll {
+    repeated FirstRechargeGiftData gifts = 1;
+}
+
+message RpcServerSignInInfo {
+}
+
+message RpcClientSignInAll {
+    int32 actId = 1;
+    repeated SignInData signInDatas = 2;
+    repeated TotalSignInRewardData totalSignInRewardDatas = 3;
+    int32 reSignCnt = 4;
+}
+
+message SignInData {
+    int32 day = 1;
+    int32 status = 2;
+}
+
+message TotalSignInRewardData {
+    int32 index = 1;
+    int32 rewardStatus = 2;
+}
+
+message RpcServerSignInReward {
+    int32 day = 1;
+}
+
+message RpcClientSignInReward {
+    int32 day = 1;
+    int32 rewardStatus = 2;
+    int32 reSignCnt = 3;
+}
+
+message RpcServerTotalSignInReward {
+    int32 index = 1;
+}
+
+message RpcClientTotalSignInReward {
+    int32 index = 1;
+    int32 rewardStatus = 2;
+}
+
+message RpcServerDailyFortuneRefresh {
+}
+
+message RpcClientDailyFortuneRefresh {
+    int32 refreshTimes = 1;
+    RewardInfo reward = 2;
+    RewardInfo cost = 3;
+}
+
+message RpcClientLimitShopDailyGift {
+    int32 got = 1;
+}
+
+message RpcServerLimitShopDailyGiftGet {
+}
+
+
+message AdvertInfo {
+    int32 advertId = 1;
+    int32 cdTime = 2;
+    int32 viewTimes = 3;
+    int32 totalTimes = 4;
+    int64 resetTime = 5;
+}
+
+message RpcClientAdvertAll {
+    repeated AdvertInfo info = 1;
+}
+
+message RpcServerAdvertInfo {
+    int32 advertId = 1;
+}
+
+message RpcClientAdvertInfo {
+    AdvertInfo info = 1;
+}
+
+message RpcClientAdvertFreeTime {
+    int32 time = 1;
+}
+
+message RpcServerAdvertBegin {
+    int32 advertId = 1;
+    string param = 2;
+}
+
+message RpcServerAdvertEnd {
+    int32 advertId = 1;
+    string param = 2;
+    string transId = 3;
+}
+
+message RpcServerAdvertReward {
+    int32 advertId = 1;
+    string param = 2;
+}
+
+message RpcClientAdvertReward {
+    int32 advertId = 1;
+    string param = 2;
+}
+
+
+message RpcClientCardInfo {
+    int32 remain = 1;
+    int32 bigRemain = 2;
+}
+
+
+message Kv {
+    string k = 1;
+    int32 v = 2;
+}
+
+message KvLong {
+    string k = 1;
+    int64 v = 2;
+}
+
+message KvDouble {
+    string k = 1;
+    double v = 2;
+}
+
+message KvStr {
+    string k = 1;
+    string v = 2;
+}
+
+message KvIntLong {
+    int32 k = 1;
+    int64 v = 2;
+}
+
+message KvIntInt {
+    int32 k = 1;
+    int32 v = 2;
+}
+
+message I18nString {
+    string format = 1;
+    map<string, string> params = 2;
+}
+
+message Reward {
+    string key = 1;
+    int64 amount = 2;
+}
+
+
+message LoginInfo {
+    string internalToken = 1;
+    string avatar = 2;
+    string channel = 3;
+    string language = 4;
+    string osVersion = 5;
+    bool relogin = 6;
+    string udid = 7;
+    string ip = 8;
+    map<string, string> extraParams = 9;
+}
+
+message BasicInfo {
+    int32 uid = 1;
+    string name = 2;
+    string avatar = 3;
+    string frame = 4;
+    int32 lv = 5;
+    int32 exp = 6;
+    bool mc = 7;
+    bool bmc = 8;
+    string title = 9;
+    int32 danScore = 10;
+}
+
+message GameRecord {
+    int32 clearTimes = 1;
+    int32 maxStage = 2;
+    int32 maxKill = 3;
+    int32 hardClear = 4;
+    int32 hardStage = 5;
+    int32 hardKill = 6;
+    int32 danScoreMax = 7;
+    int32 continuousWin = 8;
+    int32 winTimes = 9;
+    int32 totalTimes = 10;
+}
+
+message UserProp {
+    BasicInfo userInfo = 1;
+    GameRecord record = 2;
+    int32 wizard = 3;
+    int64 timestamp = 4;
+    int64 createTime = 5;
+    bool isNew = 6;
+    int32 renameCnt = 7;
+    bool noAdvert = 8;
+}
+
+message UserViewInfo {
+    BasicInfo userInfo = 1;
+    GameRecord record = 2;
+}
+
+message ExternalShow {
+    string id = 1;
+    int64 time = 2;
+}
+
+message UserReserve {
+    string cmd = 1;
+    string param = 2;
+}
+
+message RpcClientUserToken {
+    string key = 1;
+}
+
+message RpcClientCloseReason {
+    int32 code = 1;
+    I18nString msg = 2;
+}
+
+message RpcServerLogin {
+    LoginInfo info = 1;
+}
+
+message RpcClientLoginFinish {
+}
+
+message RpcServerBackHome {
+}
+
+message RpcClientBackHome {
+}
+
+message RpcClientRoleCreate {
+}
+
+message RpcClientTellmeI18n {
+    int32 type = 1;
+    I18nString msg = 2;
+}
+
+message RpcClientUserProp {
+    UserProp userProp = 1;
+}
+
+message RpcServerUserIsNew {
+}
+
+message RpcServerUserRename {
+    string name = 1;
+}
+
+message RpcClientUserRename {
+    string name = 1;
+    int32 renameCnt = 2;
+}
+
+message RpcServerUserReserve {
+    UserReserve request = 1;
+}
+
+message RpcClientUserReserve {
+    UserReserve response = 1;
+}
+
+message RpcServerUserClientError {
+    string uuid = 1;
+    string msg = 2;
+}
+
+message RpcServerUserView {
+    int32 uid = 1;
+}
+
+message RpcClientUserView {
+    UserViewInfo viewInfo = 1;
+}
+
+message RpcServerUserActivationCode {
+    string code = 1;
+}
+
+message RpcClientEnterScene {
+    int32 sceneId = 1;
+}
+
+message RpcClientUserLv {
+    int32 lv = 1;
+    int32 exp = 2;
+}
+
+message RpcServerUserChangeAvatar {
+    string avatar = 1;
+}
+
+message RpcClientUserChangeAvatar {
+    string avatar = 1;
+}
+
+message RpcServerUserAvatarList {
+}
+
+message RpcClientUserAvatarList {
+    repeated ExternalShow avatars = 1;
+}
+
+message RpcClientUserAvatarAdd {
+    ExternalShow avatar = 1;
+}
+
+message RpcServerUserChangeFrame {
+    string frame = 1;
+}
+
+message RpcClientUserChangeFrame {
+    string frame = 1;
+}
+
+message RpcServerUserFrameList {
+}
+
+message RpcClientUserFrameList {
+    repeated ExternalShow frames = 1;
+}
+
+message RpcClientUserFrameAdd {
+    ExternalShow frame = 1;
+}
+
+message RpcServerUserNewbieGuide {
+    int32 guideId = 1;
+}
+
+message RpcClientUserNewbieGuide {
+    int32 guideId = 1;
+}
+
+message RpcServerUserModuleGuide {
+    int32 moduleId = 1;
+    int32 guideId = 2;
+}
+
+message RpcClientUserModuleGuide {
+    map<int32, int32> moduleGuides = 1;
+}
+
+message RpcServerUserSetAvatarNameByAuth {
+    string avatar = 1;
+    string name = 2;
+}
+
+message RpcClientFighterSkinList {
+    repeated ExternalShow skins = 1;
+}
+
+message RpcServerClearPvpRecord {
+}
+
+message RpcServerUserChangeSkin {
+    int32 type = 1;
+    string skin = 2;
+}
+
+message RpcClientUserChangeSkin {
+    int32 type = 1;
+    string skin = 2;
+}
+
+message UsingSkin {
+    int32 type = 1;
+    string id = 2;
+}
+
+message RpcServerUserSkinList {
+}
+
+message RpcClientUserSkinList {
+    repeated ExternalShow mySkins = 1;
+    repeated UsingSkin usingSkins = 2;
+    repeated ExternalShow showSkins = 3;
+}
+
+message RpcClientUserSkinAdd {
+    ExternalShow skin = 1;
+}
+
+
+message RpcServerEnterChatChannel {
+    int32 chatType = 1;
+    int32 channel = 2;
+}
+
+message RpcClientEnterChatChannel {
+    int32 chatType = 1;
+    int32 channel = 2;
+}
+
+message RpcServerExitChatChannel {
+    int32 chatType = 1;
+    int32 channel = 2;
+}
+
+message RpcClientExitChatChannel {
+    int32 chatType = 1;
+    int32 channel = 2;
+}
+
+message ChatMsg {
+    int32 type = 1;
+    string content = 2;
+    string extra = 3;
+}
+
+message RpcServerChatSend {
+    int32 chatType = 1;
+    int32 channel = 2;
+    ChatMsg msg = 3;
+}
+
+message RpcClientChatSend {
+    int32 chatType = 1;
+    int32 channel = 2;
+    ChatHistory result = 3;
+}
+
+message RpcServerChatReport {
+    int32 chatType = 1;
+    int32 channel = 2;
+    int32 targetUid = 3;
+    string targetName = 4;
+    string content = 5;
+}
+
+message RpcServerNameReport {
+    int32 targetUid = 1;
+    string targetName = 2;
+}
+
+message ChatHistory {
+    int64 msgId = 1;
+    string content = 2;
+    int32 type = 3;
+    string extra = 4;
+    int64 ts = 5;
+    BasicInfo senderUser = 6;
+}
+
+message RpcServerChatHistory {
+    int32 chatType = 1;
+    int32 channel = 2;
+    int32 msgId = 3;
+}
+
+message RpcClientChatHistory {
+    int32 chatType = 1;
+    int32 channel = 2;
+    repeated ChatHistory results = 3;
+}
+
+message RpcClientDeleteUserChat {
+    int32 targetId = 1;
+    int32 chatType = 2;
+}
+
+message RpcClientDeleteChat {
+    int64 msgId = 1;
+    int32 chatType = 2;
+}
+
+
+message DanInfo {
+    int32 season = 1;
+    bool offSeason = 2;
+    int64 timeLeft = 3;
+    int32 battleType = 4;
+    int32 score = 5;
+    int32 maxScore = 6;
+    int32 nextBattleType = 7;
+}
+
+message RpcClientDanInfo {
+    DanInfo info = 1;
+}
+
+message RpcClientDanRewardInfo {
+    int32 type = 1;
+    repeated int32 normalReward = 2;
+    repeated int32 luxuryReward = 3;
+}
+
+message RpcServerDanNormalReward {
+    int32 lv = 1;
+}
+
+message RpcClientDanNormalReward {
+    int32 lv = 1;
+}
+
+message RpcServerDanLuxuryReward {
+    int32 lv = 1;
+}
+
+message RpcClientDanLuxuryReward {
+    int32 lv = 1;
+}
+
+message RpcServerDanRewardBatch {
+}
+
+
+message FightPlayerData {
+    BasicInfo userInfo = 1;
+    int32 side = 2;
+    map<int32, int32> enhanceLv = 3;
+    map<string, int32> resources = 4;
+    map<int32, int32> betRates = 5;
+    map<int32, int32> callRates = 6;
+    repeated FightFighterData fighters = 7;
+    int32 callCost = 8;
+    int32 eliteMonster = 9;
+    repeated WaveSelectData selectData = 10;
+    FightMissionData randMission = 11;
+}
+
+message FightFighterData {
+    string fighterId = 1;
+    int32 lv = 2;
+    bool like = 3;
+    bool trial = 4;
+}
+
+message FightActorData {
+    int32 id = 1;
+    string actorId = 2;
+    int32 side = 3;
+    int32 actorType = 4;
+    int32 grid = 5;
+    int32 reason = 6;
+    string reasonParams = 7;
+    int32 distance = 8;
+    int64 aliveTime = 9;
+    int32 lv = 10;
+    int32 specialLv = 11;
+    map<string, string> extraParams = 12;
+    map<int32, int64> attrs = 13;
+    int32 scene = 14;
+    repeated TreasureData treasures = 15;
+}
+
+message TreasureData {
+    int32 id = 1;
+    string actorId = 2;
+    int32 quality = 3;
+    map<string, int64> params = 4;
+}
+
+message BuffData {
+    string buffId = 1;
+    int32 id = 2;
+    int32 layers = 3;
+    int32 casterId = 4;
+    int32 targetId = 5;
+}
+
+message SkillData {
+    int32 casterId = 1;
+    string skillId = 2;
+    int64 atkSpeed = 3;
+    int32 mTarget = 4;
+    repeated int32 targetIds = 5;
+}
+
+message BulletData {
+    string bulletId = 1;
+    int32 casterId = 2;
+    int32 targetId = 3;
+}
+
+message DmgData {
+    int64 dmg = 1;
+    int32 casterId = 2;
+    int32 targetId = 3;
+    bool crit = 4;
+    int32 dmgType = 5;
+    int32 skillType = 6;
+}
+
+message HealData {
+    int32 casterId = 1;
+    int32 targetId = 2;
+    int64 heal = 3;
+}
+
+message WaveSelectData {
+    int32 quality = 1;
+    int32 type = 2;
+    int32 rate = 3;
+    string actorId = 4;
+}
+
+message WaveData {
+    int32 wave = 1;
+    int32 stage = 2;
+    int32 time = 3;
+    string bossId = 4;
+    int32 showWave = 5;
+}
+
+message BossHardData {
+    int32 cfgId = 1;
+    int32 time = 2;
+    int32 count = 3;
+    int32 total = 4;
+    map<int32, int64> dmg = 5;
+}
+
+message SnapshotData {
+    repeated FightPlayerData players = 1;
+    repeated FightActorData actors = 2;
+    repeated BuffData buffs = 3;
+    WaveData waveData = 4;
+    repeated FightActorData globalActors = 5;
+    int32 frame = 6;
+    int32 accelerate = 7;
+    int32 state = 8;
+    int32 operateId = 9;
+    BossHardData bossHard = 10;
+}
+
+message FightMissionData {
+    string missionId = 1;
+    int64 progress = 2;
+    int64 totalProgress = 3;
+    int32 status = 4;
+}
+
+message FightPlayerStatData {
+    int32 uid = 1;
+    int64 totalDmg = 2;
+    int32 killMonsterNum = 3;
+    int32 killBossNum = 4;
+    int32 killEliteNum = 5;
+    map<int32, int32> quality2fighter = 6;
+    map<int32, int32> betData = 7;
+    map<int32, int32> enhanceTimes = 8;
+    repeated FighterDmgData fighterDmg = 9;
+}
+
+message FighterDmgData {
+    string actorId = 1;
+    int32 lv = 2;
+    int64 dmg = 3;
+}
+
+message ActorRemoveData {
+    int32 id = 1;
+    int32 reason = 2;
+    string reasonParams = 3;
+}
+
+message RpcClientFightPlayerList {
+    repeated FightPlayerData players = 1;
+}
+
+message RpcClientFightSyncSnapshot {
+    SnapshotData snapshot = 1;
+}
+
+message RpcClientFightBegin {
+}
+
+message RpcClientFightEnd {
+    int32 result = 1;
+    int32 reason = 2;
+}
+
+message RpcClientFightFrameBegin {
+    int32 frame = 1;
+}
+
+message RpcClientFightFrameEnd {
+    int32 frame = 1;
+}
+
+message RpcServerFightFighterCall {
+}
+
+message RpcClientFightFighterCall {
+    int32 callCost = 1;
+}
+
+message RpcServerFightBet {
+    int32 quality = 1;
+}
+
+message RpcClientFightBetResult {
+    int32 quality = 1;
+    string fighterId = 2;
+    int32 reason = 3;
+}
+
+message RpcServerFightFighterMove {
+    int32 fromGrid = 1;
+    int32 toGrid = 2;
+}
+
+message RpcClientFightFighterMove {
+    int32 side = 1;
+    int32 fromGrid = 2;
+    int32 toGrid = 3;
+    int32 goTime = 4;
+    int32 backTime = 5;
+}
+
+message RpcServerFightFighterSynthetic {
+    int32 grid = 1;
+}
+
+message RpcServerFightFighterSyntheticMythic {
+    string actorId = 1;
+}
+
+message RpcServerFightFighterRemove {
+    int32 grid = 1;
+    int32 id = 2;
+}
+
+message RpcClientFightFighterJoin {
+    int32 side = 1;
+    int32 id = 2;
+    int32 fromGrid = 3;
+    int32 toGrid = 4;
+    int32 delayTime = 5;
+}
+
+message RpcClientFightFighterGrid {
+    map<int32, int32> actorGrids = 1;
+}
+
+message RpcClientFightActorAttrs {
+    int32 id = 1;
+    map<int32, int64> attrs = 2;
+}
+
+message RpcClientFightSyncResource {
+    int32 side = 1;
+    string resourceId = 2;
+    int32 delta = 3;
+    int32 after = 4;
+    int32 reason = 5;
+    repeated string reasonParams = 6;
+}
+
+message RpcServerFightEnhance {
+    int32 type = 1;
+}
+
+message RpcClientFightEnhance {
+    int32 type = 1;
+    int32 lv = 2;
+}
+
+message RpcClientFightNewActors {
+    repeated FightActorData actors = 1;
+}
+
+message RpcClientFightRemoveActors {
+    repeated ActorRemoveData removeActors = 1;
+}
+
+message RpcServerFightActorsDistance {
+    int32 actorType = 1;
+}
+
+message RpcClientFightActorsDistance {
+    int32 actorType = 1;
+    map<int32, int32> id2Distance = 2;
+}
+
+message RpcClientFightWaveBegin {
+    int32 wave = 1;
+}
+
+message RpcClientFightWaveEnd {
+    int32 wave = 1;
+}
+
+message RpcClientFightWaveStage {
+    WaveData waveData = 1;
+}
+
+message RpcServerFightWaveSelect {
+    int32 index = 1;
+}
+
+message RpcClientFightWaveSelect {
+    int32 side = 1;
+    repeated WaveSelectData selectData = 2;
+}
+
+message RpcClientFightWaveSelectFinish {
+    int32 index = 1;
+}
+
+message RpcClientFightMonsterEliteAppear {
+    int32 eliteMonster = 1;
+}
+
+message RpcServerFightMonsterEliteCall {
+}
+
+message RpcClientFightMonsterEliteCall {
+}
+
+message RpcServerFightAccelerate {
+    int32 rate = 1;
+}
+
+message RpcClientFightAccelerate {
+    int32 side = 1;
+    int32 rate = 2;
+}
+
+message RpcClientFightBuffAdd {
+    BuffData buff = 1;
+}
+
+message RpcClientFightBuffRemove {
+    int32 id = 1;
+    int32 reason = 2;
+}
+
+message RpcClientFightBuffUpdate {
+    BuffData buff = 1;
+}
+
+message RpcClientFightHitDmg {
+    DmgData dmg = 1;
+}
+
+message RpcClientFightCreateBullet {
+    BulletData bullet = 1;
+}
+
+message RpcClientFightHeal {
+    HealData heal = 1;
+}
+
+message RpcClientFightSkill {
+    SkillData skill = 1;
+}
+
+message RpcServerFightMissionList {
+}
+
+message RpcClientFightMissionList {
+    repeated FightMissionData missions = 1;
+}
+
+message RpcClientFightMissionComplete {
+    string missionId = 1;
+}
+
+message RpcServerFightPlayerStat {
+}
+
+message RpcClientFightPlayerStat {
+    repeated FightPlayerStatData statData = 1;
+}
+
+message RpcClientFightRoomDismiss {
+    string token = 1;
+}
+
+message RpcClientFightMissionUpdate {
+    int32 side = 1;
+    FightMissionData mission = 2;
+}
+
+message RpcServerFightFighterOperate {
+    int32 id = 1;
+}
+
+message RpcClientFightFighterOperate {
+    int32 id = 1;
+    int32 specialLv = 2;
+    map<string, string> extraParams = 3;
+}
+
+message RpcServerFightFighterAttrs {
+    int32 id = 1;
+    map<int32, int64> baseAttrs = 2;
+}
+
+message RpcClientFightFighterAttrs {
+    int32 id = 1;
+    string actorId = 2;
+    map<int32, int64> baseAttrs = 3;
+    map<int32, int64> attrs = 4;
+}
+
+message RpcServerFightFighterAttrsShow {
+    int32 id = 1;
+}
+
+message RpcClientFightFighterAttrsShow {
+    int32 id = 1;
+    map<int32, int64> baseAttrs = 2;
+    map<int32, int64> attrs = 3;
+    map<string, string> extraParams = 4;
+}
+
+message RpcServerFightNewbiePause {
+}
+
+message RpcClientFightNewbiePause {
+}
+
+message RpcServerFightNewbieResume {
+}
+
+message RpcClientFightNewbieResume {
+}
+
+message RpcServerFightNewbieGuide {
+    int32 operateId = 1;
+    string param = 2;
+}
+
+message RpcClientFightNewbieGuide {
+    int32 operateId = 1;
+}
+
+message RpcServerFightLogin {
+    int32 uid = 1;
+    string token = 2;
+}
+
+message RpcClientFightLoginFinish {
+}
+
+message RpcServerFightNewbieNextWave {
+    int32 wave = 1;
+}
+
+message RpcClientFightNewbieNextWave {
+    int32 wave = 1;
+}
+
+message RpcClientFightSkillEffect {
+    int32 casterId = 1;
+    repeated int32 targetIds = 2;
+    string skillId = 3;
+    string effectId = 4;
+    map<string, string> extraParams = 5;
+}
+
+message RpcClientFightPlayerOnlineStatus {
+    int32 uid = 1;
+    int32 status = 2;
+}
+
+message TeleportData {
+    int32 id = 1;
+    int32 fromGrid = 2;
+    int32 toGrid = 3;
+}
+
+message RpcServerFightFighterTeleport {
+    int32 fromGrid = 1;
+}
+
+message RpcClientFightFighterTeleport {
+    repeated TeleportData teleports = 1;
+}
+
+message RpcServerFightFighterTeleportAll {
+}
+
+message RpcServerFightBossHardData {
+}
+
+message RpcClientFightBossHardData {
+    BossHardData bossData = 1;
+}
+
+message RpcClientFightErrCode {
+    int32 errCode = 1;
+}
+
+message RpcClientFightFighterTreasures {
+    int32 id = 1;
+    repeated TreasureData treasures = 2;
+}
+
+
+message FighterData {
+    string fighterId = 1;
+    int32 lv = 2;
+    int32 pieces = 3;
+    bool canBuy = 4;
+    string skin = 5;
+    int64 expired = 6;
+}
+
+message RpcServerFighterList {
+}
+
+message RpcClientFighterList {
+    repeated FighterData fighters = 1;
+}
+
+message RpcServerOneFighter {
+    string fighterId = 1;
+}
+
+message RpcClientOneFighter {
+    FighterData fighter = 1;
+}
+
+message RpcServerFighterLvUp {
+    string fighterId = 1;
+    bool convert = 2;
+}
+
+message RpcClientFighterRecruitInfo {
+    bool free = 1;
+    int32 nextFreeReq = 2;
+    int32 num = 3;
+}
+
+message RpcServerFighterRecruit {
+    int32 num = 1;
+}
+
+message RpcClientFighterRecruit {
+    repeated RewardInfo appearList = 1;
+    repeated int32 acquireList = 2;
+}
+
+message RpcServerFighterFirstBuy {
+    string id = 1;
+    int32 type = 2;
+}
+
+message RpcClientFighterLike {
+    repeated string fighters = 1;
+}
+
+message RpcServerFighterLike {
+    string fighterId = 1;
+    bool like = 2;
+}
+
+message RpcServerFighterSkinSwitch {
+    string fighterId = 1;
+    string skinId = 2;
+}
+
+message FighterProb {
+    string fighterId = 1;
+    int32 rate = 2;
+    bool canWish = 3;
+}
+
+message RpcServerFighterRecruitProbInfo {
+}
+
+message RpcClientFighterRecruitProbInfo {
+    repeated FighterProb list = 1;
+}
+
+message RpcServerFighterRecruitAdvanced {
+    int32 num = 1;
+}
+
+message RpcClientFighterRecruitAdvancedInfo {
+    int32 progress = 1;
+    string wishFighter = 2;
+}
+
+message RpcServerFighterRecruitAdvancedWish {
+    string fighterId = 1;
+}
+
+message RpcServerFighterRecruitAdvancedSelect {
+    string fighterId = 1;
+}
+
+message RpcClientFighterCritDmg {
+    int32 critDmg = 1;
+}
+
+message RpcClientFighterRecruitAdvancedMode {
+    int32 mode = 1;
+    int64 timeLeft = 2;
+}
+
+
+message FriendInfo {
+    BasicInfo userInfo = 1;
+    int32 status = 2;
+    int64 ts = 3;
+}
+
+message FriendInfoAll {
+    repeated FriendInfo myFriends = 1;
+    repeated FriendInfo beApplys = 2;
+}
+
+message RpcServerFriendInfo {
+}
+
+message RpcClientFriendInfo {
+    FriendInfoAll info = 1;
+}
+
+message RpcServerFriendSearchByUid {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendSearchByUid {
+    FriendInfo result = 1;
+}
+
+message RpcServerFriendSearchByName {
+    string name = 1;
+}
+
+message RpcClientFriendSearchByName {
+    repeated FriendInfo results = 1;
+}
+
+message RpcServerFriendApplyAdd {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendApplyAdd {
+    FriendInfo apply = 1;
+}
+
+message RpcServerFriendRefuseBeApply {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendRefuseBeApply {
+    repeated int32 refuseUid = 1;
+}
+
+message RpcServerFriendAgreeBeApply {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendAdd {
+    FriendInfo addFriend = 1;
+}
+
+message RpcServerFriendDel {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendDel {
+    int32 targetUid = 1;
+}
+
+message RpcServerFriendFight {
+    int32 friendUid = 1;
+}
+
+message RpcServerFriendReadBeApplyFriends {
+}
+
+message RpcClientFriendReadBeApplyFriends {
+    int32 isRed = 1;
+}
+
+message RpcServerFriendReadChat {
+    int32 targetUid = 1;
+}
+
+message RpcClientFriendUnreadChat {
+    repeated int32 unreadUid = 1;
+}
+
+message RpcClientFriendOnlineStatus {
+    int32 friendUid = 1;
+    int32 status = 2;
+    int64 logoutTime = 3;
+}
+
+message RpcServerFriendFightInvite {
+    int32 type = 1;
+    int32 toId = 2;
+}
+
+message RpcClientFriendFightInvite {
+    int32 type = 1;
+    int32 toId = 2;
+    int32 status = 3;
+}
+
+message RpcClientFriendFightInviteNotice {
+    int32 type = 1;
+    int32 fromId = 2;
+}
+
+message RpcServerFriendFightInviteOp {
+    int32 type = 1;
+    int32 fromId = 2;
+    int32 op = 3;
+}
+
+message RpcClientFriendFightInviteOp {
+    int32 type = 1;
+    int32 fromId = 2;
+    int32 op = 3;
+}
+
+message RpcClientFriendFightInviteOpNotice {
+    int32 type = 1;
+    int32 fromId = 2;
+    int32 op = 3;
+}
+
+message RpcServerFriendFightInviteCancel {
+    int32 type = 1;
+}
+
+message RpcClientFriendFightInviteCancel {
+    int32 type = 1;
+    int32 fromId = 2;
+    int32 status = 3;
+}
+
+
+message RpcServerFightMatch {
+    int32 type = 1;
+}
+
+message RpcServerFightRoomCreate {
+    int32 type = 1;
+}
+
+message RpcClientFightRoomCreate {
+    int32 type = 1;
+    string token = 2;
+    int32 status = 3;
+    string shareToken = 4;
+}
+
+message RpcServerFightRoomDestroy {
+    int32 type = 1;
+    string token = 2;
+}
+
+message RpcClientFightRoomDestroy {
+    int32 type = 1;
+}
+
+message RpcServerFightRoomJoin {
+    int32 type = 1;
+    string token = 2;
+}
+
+message RpcClientFightRoomMiss {
+    int32 type = 1;
+    string tips = 2;
+}
+
+message RpcServerFightMatchCancel {
+    int32 type = 1;
+}
+
+message RpcClientFightMatchCancel {
+    int32 status = 1;
+}
+
+message RpcClientFightMatchSuccess {
+    FightdHost server = 1;
+    repeated MatchPlayerData players = 2;
+    int32 type = 3;
+}
+
+message RpcClientFightMatchFail {
+}
+
+message FightdHost {
+    string token = 1;
+    string ip = 2;
+    int32 port = 3;
+}
+
+message MatchPlayerData {
+    BasicInfo userInfo = 1;
+    string battlefieldSkin = 2;
+    map<string, string> fighterSkins = 3;
+}
+
+message StageRewardData {
+    int32 stage = 1;
+    repeated int32 status = 2;
+}
+
+message RpcServerStageRewardGet {
+    int32 battleType = 1;
+    int32 stage = 2;
+    int32 sIndex = 3;
+}
+
+message RpcClientStageInfo {
+    int32 battleType = 1;
+    repeated StageRewardData coop = 2;
+    repeated StageRewardData coopHard = 3;
+}
+
+message FightResultPlayerData {
+    BasicInfo userInfo = 1;
+    FightPlayerStatData stat = 2;
+}
+
+message RpcClientFightCoopResult {
+    bool auth = 1;
+    int32 wave = 2;
+    int32 maxWave = 3;
+    int32 reason = 4;
+    repeated FightResultPlayerData players = 5;
+    repeated RewardInfo rewards = 6;
+}
+
+message FightResultPvpPlayerData {
+    BasicInfo userInfo = 1;
+    GameRecord gameRecord = 2;
+    FightPlayerStatData stat = 3;
+    int32 addExp = 4;
+    int32 addScore = 5;
+}
+
+message FightPvpReward {
+    int32 type = 1;
+    repeated RewardInfo rewards = 2;
+}
+
+message RpcClientFightPvpCircleResult {
+    bool auth = 1;
+    int32 winner = 2;
+    int32 reason = 3;
+    repeated FightResultPvpPlayerData players = 4;
+    repeated FightPvpReward reward = 5;
+}
+
+message RpcClientFightCoopHardResult {
+    bool auth = 1;
+    int32 wave = 2;
+    int32 maxWave = 3;
+    int32 reason = 4;
+    repeated FightResultPlayerData players = 5;
+    repeated RewardInfo rewards = 6;
+}
+
+message RpcServerStageSwitch {
+    int32 battleType = 1;
+}
+
+message RpcServerFightRoomJoinFromShare {
+    string shareToken = 1;
+}
+
+message RpcClientFightPvpPushResult {
+    bool auth = 1;
+    int32 winner = 2;
+    int32 reason = 3;
+    repeated FightResultPvpPlayerData players = 4;
+    repeated FightPvpReward reward = 5;
+}
+
+message RpcClientFightRewardTimes {
+    map<int32, int32> rewardTimes = 1;
+}
+
+message RpcServerFightPassRewardGet {
+    int32 type = 1;
+}
+
+message RpcClientFightPassReward {
+    map<int32, int32> rewards = 1;
+    int64 refreshTime = 2;
+}
+
+message RpcServerFightPvpWinRewardGet {
+}
+
+message RpcClientFightPvpWinReward {
+    int32 win = 1;
+    int32 need = 2;
+    int32 reward = 3;
+}
+
+message RpcServerFightMissionRefresh {
+}
+
+message RpcServerFightMissionRewardGet {
+}
+
+message RpcClientFightMissionInfo {
+    int32 missCnt = 1;
+    int32 refreshCnt = 2;
+    string curMissId = 3;
+    int32 missStatus = 4;
+}
+
+
+message HeroActInfo {
+    int32 actId = 1;
+    int32 fake = 2;
+    map<int32, int32> mapActId = 3;
+    int64 endTime = 4;
+}
+
+message RpcServerHeroActInfo {
+}
+
+message RpcClientHeroActInfo {
+    HeroActInfo info = 1;
+}
+
+message RpcServerHeroSubActInfo {
+    int32 actId = 1;
+}
+
+message HeroTokenInfo {
+    int32 actId = 1;
+    int32 level = 2;
+    int64 exp = 3;
+    int32 tokenState = 4;
+    repeated HeroTokenClaimedReward claimedRewards = 5;
+    int64 endTime = 6;
+}
+
+message HeroTokenClaimedReward {
+    int32 rewardType = 1;
+    repeated int32 levels = 2;
+}
+
+message RpcClientHeroPassInfo {
+    HeroTokenInfo info = 1;
+}
+
+message RpcServerHeroPassInfo {
+    int32 actId = 1;
+}
+
+message RpcServerHeroPassClaimReward {
+    int32 actId = 1;
+    int32 rewardType = 2;
+    int32 level = 3;
+}
+
+message HeroSignInData {
+    int32 day = 1;
+    int32 status = 2;
+}
+
+message RpcServerHeroSignInInfo {
+    int32 actId = 1;
+}
+
+message RpcClientHeroSignInInfo {
+    int32 actId = 1;
+    int64 endTime = 2;
+    repeated HeroSignInData signInDatas = 3;
+    int32 reSignCnt = 4;
+}
+
+message RpcServerHeroSignInReward {
+    int32 actId = 1;
+    int32 day = 2;
+}
+
+message RpcClientHeroSignInReward {
+    int32 day = 1;
+    int32 rewardStatus = 2;
+    int32 reSignCnt = 3;
+}
+
+message HeroTreasureHuntData {
+    int32 curPos = 1;
+    int32 curLaps = 2;
+    int64 huntTickets = 3;
+    repeated int32 claimedLapRewards = 4;
+}
+
+message HeroTreasureHuntDrawRecord {
+    int64 ts = 1;
+    int32 pos = 2;
+}
+
+message RpcServerHeroTreasureHuntInfo {
+    int32 actId = 1;
+}
+
+message RpcClientHeroTreasureHuntInfo {
+    int32 actId = 1;
+    int64 endTime = 2;
+    HeroTreasureHuntData data = 3;
+    repeated HeroTreasureHuntDrawRecord drawRecords = 4;
+}
+
+message RpcServerHeroTreasureHuntDraw {
+    int32 actId = 1;
+    int32 drawTimes = 2;
+}
+
+message RpcClientHeroTreasureHuntDraw {
+    repeated int32 drawResults = 1;
+}
+
+message RpcServerHeroTreasureHuntLapReward {
+    int32 actId = 1;
+    int32 lapIdx = 2;
+}
+
+
+message MailInfo {
+    int64 time = 1;
+    string type = 2;
+    string mailId = 3;
+    bool isRead = 4;
+    string title = 5;
+    string content = 6;
+    repeated Reward reward = 7;
+    bool isPick = 8;
+    int64 timeRemain = 9;
+}
+
+message RpcClientMailAdd {
+    MailInfo mail = 1;
+}
+
+message RpcServerMailList {
+}
+
+message RpcClientMailList {
+    repeated MailInfo mails = 1;
+}
+
+message RpcServerMailRead {
+    string mailId = 1;
+}
+
+message RpcClientMailRead {
+    string mailId = 1;
+}
+
+message RpcServerMailReceive {
+    string mailId = 1;
+}
+
+message RpcClientMailReceive {
+    string mailId = 1;
+}
+
+message RpcServerMailOneKeyReceive {
+}
+
+message RpcClientMailOneKeyReceive {
+    repeated string mailIds = 1;
+}
+
+message RpcServerMailDelete {
+    string mailId = 1;
+}
+
+message RpcClientMailDelete {
+    string mailId = 1;
+}
+
+message RpcServerMailOneKeyDelete {
+}
+
+message RpcClientMailOneKeyDelete {
+    repeated string mailIds = 1;
+}
+
+
+message OneMissionInfo {
+    string missId = 1;
+    repeated KvLong progress = 2;
+    int32 state = 3;
+    bool advert = 4;
+}
+
+message TypeMissionInfo {
+    int32 type = 1;
+    int64 time = 2;
+    int32 rewardGet = 3;
+    bool advert = 4;
+    repeated OneMissionInfo missions = 5;
+}
+
+message RpcClientMissionList {
+    repeated TypeMissionInfo allInfo = 1;
+}
+
+message RpcClientMissionUpdate {
+    OneMissionInfo oneInfo = 1;
+}
+
+message RpcClientMissionDelete {
+    string missId = 1;
+}
+
+message RpcServerMissionComplete {
+    string missId = 1;
+}
+
+message RpcServerMissionRefresh {
+    string missId = 1;
+}
+
+message RpcClientMissionRefreshState {
+    bool state = 1;
+}
+
+message RpcServerDailyMissionPointReward {
+    int32 index = 1;
+}
+
+message RpcClientDailyMissionPointReward {
+    int32 index = 1;
+}
+
+message DailyMissionPoint {
+    int32 index = 1;
+    bool reward = 2;
+}
+
+message RpcClientDailyMissionPointSync {
+    int32 point = 1;
+    repeated DailyMissionPoint dailyMissionPoints = 2;
+}
+
+message RpcServerMissionTypeInfo {
+    int32 type = 1;
+}
+
+
+message NoticeInfo {
+    string type = 1;
+    string id = 2;
+    int64 beginTime = 3;
+    int64 endTime = 4;
+    string title = 5;
+    string content = 6;
+    bool read = 7;
+    string imgPosition = 8;
+    int32 isTop = 9;
+    string bannerUrl = 10;
+}
+
+message RpcServerNoticeList {
+}
+
+message RpcClientNoticeList {
+    repeated NoticeInfo notice = 1;
+}
+
+message RpcServerNoticeRead {
+    string noticeId = 1;
+}
+
+message RpcClientNoticeRead {
+    string noticeId = 1;
+}
+
+message RpcClientNoticeNew {
+    NoticeInfo notice = 1;
+}
+
+message RpcClientNoticeDelete {
+    string noticeId = 1;
+}
+
+message RpcServerNoticeQqNum {
+}
+
+message RpcClientNoticeQqNum {
+    string qqNumStr = 1;
+}
+
+
+message PassportInfo {
+    int32 season = 1;
+    int32 rewardId = 2;
+    int64 timeLeft = 3;
+    int32 lv = 4;
+    int32 exp = 5;
+    int32 passType = 6;
+    repeated int32 normalReward = 7;
+    repeated int32 luxuryReward = 8;
+}
+
+message RpcServerPassportInfo {
+}
+
+message RpcClientPassportInfo {
+    PassportInfo info = 1;
+}
+
+message RpcServerPassportNormalReward {
+    int32 lv = 1;
+}
+
+message RpcClientPassportNormalReward {
+    int32 lv = 1;
+}
+
+message RpcServerPassportLuxuryReward {
+    int32 lv = 1;
+}
+
+message RpcClientPassportLuxuryReward {
+    int32 lv = 1;
+}
+
+message RpcClientPassportLvExp {
+    int32 lv = 1;
+    int32 exp = 2;
+}
+
+message RpcServerPassportRewardBatch {
+}
+
+message RpcClientPassportMultipleExpInfo {
+    int32 multiple = 1;
+    int32 total = 2;
+    int32 remain = 3;
+}
+
+
+message PayOrderInfo {
+    bool ok = 1;
+    int32 shopId = 2;
+    int32 goodsId = 3;
+    string productId = 4;
+    string extraProductId = 5;
+    string price = 6;
+    string orderId = 7;
+    string orderSign = 8;
+    string extra = 9;
+    string notifyPath = 10;
+    int32 ret = 11;
+}
+
+message RpcServerPayCreateOrder {
+    int32 shopId = 1;
+    int32 goodsId = 2;
+    string productId = 3;
+    string currency = 4;
+}
+
+message RpcClientPayCreateOrder {
+    PayOrderInfo order = 1;
+}
+
+
+message FighterInfo {
+    string type = 1;
+    int64 totalDmg = 2;
+}
+
+message RankInfo {
+    BasicInfo basicInfo = 1;
+    repeated FighterInfo fighters = 2;
+    int32 rank = 3;
+    int64 rankVal = 4;
+    string extend = 5;
+}
+
+message CoPlayerInfo {
+    BasicInfo basicInfo = 1;
+    repeated FighterInfo fighters = 2;
+    int64 totalDmg = 3;
+}
+
+message CoRankInfo {
+    CoPlayerInfo leftUser = 1;
+    CoPlayerInfo rightUser = 2;
+    int32 rank = 3;
+    int64 rankVal = 4;
+    string extend = 5;
+}
+
+message RankListInfo {
+    int32 rankType = 1;
+    int32 rankId = 2;
+    int64 endTime = 3;
+    repeated RankInfo rankInfos = 4;
+    repeated CoRankInfo coRankInfos = 5;
+}
+
+message RpcServerRankInfo {
+    int32 rankType = 1;
+    int32 version = 2;
+}
+
+message RpcClientRankInfo {
+    RankListInfo rankList = 1;
+}
+
+
+message RelicData {
+    string relicId = 1;
+    int32 lv = 2;
+    int32 pieces = 3;
+}
+
+message RpcServerRelicList {
+}
+
+message RpcClientRelicList {
+    repeated RelicData relics = 1;
+}
+
+message RpcServerOneRelic {
+    string relicId = 1;
+}
+
+message RpcClientOneRelic {
+    RelicData relic = 1;
+}
+
+message RpcServerRelicLvUp {
+    string relicId = 1;
+}
+
+
+message GoodsInfo {
+    int32 goodsId = 1;
+    int32 buyCnt = 2;
+    int32 maxBuyCnt = 3;
+    int64 time = 4;
+    int64 leftTime = 5;
+    int32 saleState = 6;
+}
+
+message ShopInfo {
+    int32 shopId = 1;
+    int64 leftTime = 2;
+    repeated GoodsInfo goodsInfo = 3;
+    int32 leftRefreshCnt = 4;
+    int32 maxRefreshCnt = 5;
+    bool isRed = 6;
+}
+
+message RpcServerShopInfoAll {
+}
+
+message RpcClientShopInfoAll {
+    repeated ShopInfo allShopInfo = 1;
+}
+
+message RpcServerShopInfoOne {
+    int32 shopId = 1;
+}
+
+message RpcClientShopInfoOne {
+    ShopInfo shopInfo = 1;
+}
+
+message RpcServerShopBuy {
+    int32 shopId = 1;
+    int32 goodsId = 2;
+    int32 buyCnt = 3;
+}
+
+message RpcClientShopDel {
+    int32 shopId = 1;
+}
+
+message RpcServerShopReadRed {
+    int32 shopId = 1;
+}
+
+message RpcClientShopMultiDiamondInfo {
+    repeated int32 goods = 1;
+}
+
+message RpcServerShopRefresh {
+    int32 shopId = 1;
+}
+
+
+message ThemeActInfo {
+    int32 actId = 1;
+    int32 fake = 2;
+    map<int32, int32> mapActId = 3;
+    int64 endTime = 4;
+}
+
+message RpcServerThemeActInfo {
+}
+
+message RpcClientThemeActInfo {
+    ThemeActInfo info = 1;
+}
+
+message RpcServerThemeSubActInfo {
+    int32 actId = 1;
+}
+
+message ThemeSignInfo {
+    int32 actId = 1;
+    int32 day = 2;
+    map<int32, int32> signDays = 3;
+    int64 endTime = 4;
+}
+
+message RpcClientThemeSignActInfo {
+    ThemeSignInfo info = 1;
+}
+
+message RpcServerThemeSignActReward {
+    int32 actId = 1;
+    int32 day = 2;
+}
+
+message RpcServerThemeActGift {
+    int32 actId = 1;
+}
+
+message RpcClientThemeActGift {
+    int32 actId = 1;
+    map<int32, int32> buyInfo = 2;
+    int64 endTime = 3;
+}
+
+message RpcServerThemeActMission {
+    int32 actId = 1;
+}
+
+message RpcClientThemeActMission {
+    int32 actId = 1;
+    int64 endTime = 2;
+}
+
+message RpcServerThemeContinuousCharge {
+    int32 actId = 1;
+}
+
+message ThemeContinuousChargeInfo {
+    int32 curDayNo = 1;
+    int32 giftTag = 2;
+    int32 buyedDayNo = 3;
+    int32 bigRewardStatus = 4;
+}
+
+message RpcClientThemeContinuousCharge {
+    int32 actId = 1;
+    int64 endTime = 2;
+    repeated ThemeContinuousChargeInfo infos = 3;
+}
+
+message RpcServerThemeContinuousChargeBigReward {
+    int32 actId = 1;
+    int32 giftTag = 2;
+}
+
+message TokenInfo {
+    int32 actId = 1;
+    int32 level = 2;
+    int64 exp = 3;
+    int64 props = 4;
+    int32 dailyExp = 5;
+    int32 tokenState = 6;
+    repeated TokenClaimedReward claimedRewards = 7;
+    int64 endTime = 8;
+}
+
+message TokenClaimedReward {
+    int32 rewardType = 1;
+    repeated int32 levels = 2;
+}
+
+message RpcClientThemePassInfo {
+    TokenInfo info = 1;
+}
+
+message RpcServerThemePassInfo {
+    int32 actId = 1;
+}
+
+message RpcServerThemePassClaimReward {
+    int32 actId = 1;
+    int32 rewardType = 2;
+    int32 level = 3;
+}
+
+message RpcServerThemePassUpgrade {
+    int32 actId = 1;
+    int32 up = 2;
+}
+
+message LightLampLotteryData {
+    repeated int32 gridRewards = 1;
+    map<int32, int32> colStatus = 2;
+    map<int32, int32> rowStatus = 3;
+    map<int32, int32> lineStatus = 4;
+    int32 lineNum = 5;
+    int64 wishItems = 6;
+}
+
+message RpcServerLightLampLotteryInfo {
+    int32 actId = 1;
+}
+
+message RpcClientLightLampLotteryInfo {
+    int32 actId = 1;
+    int64 endTime = 2;
+    LightLampLotteryData data = 3;
+}
+
+message RpcServerLightLampLottery {
+    int32 actId = 1;
+    int32 lotteryTimes = 2;
+}
+
+message RpcClientLightLampLottery {
+    int32 actId = 1;
+    repeated int32 gridIds = 2;
+}
+
+message RpcServerLightLampLotteryLineReward {
+    int32 actId = 1;
+    int32 lineRewardId = 2;
+}
+
+message RpcServerLightLampLotteryRowReward {
+    int32 actId = 1;
+    int32 rowRewardId = 2;
+}
+
+message RpcServerLightLampLotteryColReward {
+    int32 actId = 1;
+    int32 colRewardId = 2;
+}
+
+
+message TipsInfo {
+    int32 moduleId = 1;
+    int32 count = 2;
+}
+
+message RpcClientTipsInfo {
+    TipsInfo tips = 1;
+}
+
+message RpcClientLoginTipsInfo {
+    repeated TipsInfo tips = 1;
+}
+
+
+message RpcServerWelfareMissionAddProgress {
+    string missionId = 1;
+    int64 progress = 2;
+}
+
+message RpcServerWelfareSubscription {
+    repeated int32 subList = 1;
+}
+
+message RpcServerWelfareUpdateWxGameCircleInfo {
+    string info = 1;
+}
+
+
+message RpcServerCmd {
+    string cmd = 1;
+    string args = 2;
+}
+
+message RpcClientCmd {
+    string result = 1;
+}
