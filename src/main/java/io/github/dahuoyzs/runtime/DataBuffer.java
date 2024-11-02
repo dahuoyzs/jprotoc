@@ -22,9 +22,6 @@ public class DataBuffer {
         this.buffer = bytes;
         this.byteLen = bytes.length;
         offset = 0;
-        if (!isProtobuf(bytes)) {
-            throw new IllegalArgumentException("not protobuf bytes");
-        }
     }
 
     public static DataBuffer of(byte[] bytes) {
@@ -139,23 +136,6 @@ public class DataBuffer {
             e.printStackTrace();
             //忽略
             return null;
-        }
-    }
-
-
-    /**
-     * 给我一个字节数组,尝试判断是否为有效的protobuf数据
-     *
-     * @param bytes proto字节数组
-     * @return boolean 是否为protobuf数据
-     */
-    public static boolean isProtobuf(byte[] bytes) {
-        try {
-            DataBuffer dataBuffer = DataBuffer.of(bytes);
-            List<PBField> fieldList = dataBuffer.toFieldList();
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 

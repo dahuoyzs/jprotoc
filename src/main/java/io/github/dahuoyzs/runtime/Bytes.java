@@ -1,6 +1,8 @@
 package io.github.dahuoyzs.runtime;
 
 
+import java.util.List;
+
 public class Bytes {
 
     /**
@@ -15,11 +17,27 @@ public class Bytes {
             byte[] after = new byte[bytes.length - i];
             System.arraycopy(bytes, 0, before, 0, i);
             System.arraycopy(bytes, i, after, 0, bytes.length - i);
-            if (DataBuffer.isProtobuf(after)) {
+            if (isProtobuf(after)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    /**
+     * 给我一个字节数组,尝试判断是否为有效的protobuf数据
+     *
+     * @param bytes proto字节数组
+     * @return boolean 是否为protobuf数据
+     */
+    public static boolean isProtobuf(byte[] bytes) {
+        try {
+            DataBuffer dataBuffer = DataBuffer.of(bytes);
+            List<PBField> fieldList = dataBuffer.toFieldList();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
