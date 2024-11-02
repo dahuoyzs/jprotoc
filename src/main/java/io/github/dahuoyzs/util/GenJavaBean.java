@@ -4,13 +4,14 @@ package io.github.dahuoyzs.util;
 import io.github.dahuoyzs.jprotoc.parse.bo.FieldInfo;
 import io.github.dahuoyzs.jprotoc.parse.bo.ProtoInfo;
 
+import java.io.File;
+
 public class GenJavaBean {
 
-
     //enum模板
-    public static String enumStartTlp = "public enum %s  {\n";
-    public static String enumFieldTlp = "    %s(%s),\n";
-    public static String enumMethodTlp = "    ;\n" +
+    private static String enumStartTlp = "public enum %s  {\n";
+    private static String enumFieldTlp = "    %s(%s),\n";
+    private static String enumMethodTlp = "    ;\n" +
             "    private int value;\n" +
             "\n" +
             "    private %s(int value) {\n" +
@@ -21,31 +22,31 @@ public class GenJavaBean {
             "      return value;\n" +
             "    }\n";
     //class模板
-    public static String beanStartTlp = "public class %s  {\n";
-    public static String beanFieldTlp = "    %s %s;\n";
-    public static String beanGetMethodTlp = "    public %s get%s() {\n" +
+    private static String beanStartTlp = "public class %s  {\n";
+    private static String beanFieldTlp = "    %s %s;\n";
+    private static String beanGetMethodTlp = "    public %s get%s() {\n" +
             "        return %s;\n" +
             "    }\n";
-    public static String beanSetMethodTlp = "    public void set%s(%s %s) {\n" +
+    private static String beanSetMethodTlp = "    public void set%s(%s %s) {\n" +
             "        this.%s = %s;\n" +
             "    }\n";
 
     //end
-    public static String END = "}\n";
+    private static String END = "}\n";
 
     //生成代码
-    public static void gen(ProtoInfo protoInfo) {
+    public static void gen(ProtoInfo protoInfo, File dir) {
         String java_multiple_files = protoInfo.getOptionMap().getOrDefault("java_multiple_files", "false");
         if ("true".equals(java_multiple_files)) {//多文件
-            genMultiple(protoInfo);
+            genMultiple(protoInfo,dir);
         } else {//单文件
-            genSingle(protoInfo);
+            genSingle(protoInfo, dir);
         }
     }
 
     //生成多文件代码
-    public static void genMultiple(ProtoInfo protoInfo){
-        String packStr = Utils.getPackageStr();
+    public static void genMultiple(ProtoInfo protoInfo, File dir){
+        String packStr = protoInfo.getPackageName();
         String importStr = "import java.util.*;\n" +
                 "import java.lang.*;\n" +
                 "import io.protostuff.Tag;\n";
@@ -63,13 +64,14 @@ public class GenJavaBean {
             String enumCode = enumStart + fieldSb + enumMethod + END;
             //代码生成
             String code = packStr + enumCode;
-            String targetFileName = Utils.genDir + Utils.upperFirst(enumName) + ".java";
+            String targetFileName = dir.getAbsolutePath() + File.separator
+                    + Utils.upperFirst(enumName) + ".java";
 //            System.out.println("code:" + code);
 //            System.out.println("targetFileName:" + targetFileName);
-            Utils.write(targetFileName, code);
+            Utils.writeFileStr(new File(targetFileName), code);
         });
 
-        protoInfo.getObjMap().forEach((objName,fieldInfos)->{
+        protoInfo.getMessageMap().forEach((objName,fieldInfos)->{
             //构建字符串
             String beanStart = String.format(beanStartTlp, objName);
 
@@ -96,22 +98,24 @@ public class GenJavaBean {
 
             //代码生成
             String code = packStr + importStr + beanCode;
-            String targetFileName = Utils.genDir +  Utils.upperFirst(objName) + ".java";
+            String targetFileName = dir.getAbsolutePath() + File.separator
+                    + Utils.upperFirst(objName) + ".java";
 //            System.out.println("code:" + code);
 //            System.out.println("targetFileName:" + targetFileName);
-            Utils.write(targetFileName, code);
+            Utils.writeFileStr(new File(targetFileName), code);
         });
     }
 
     //生成单文件代码
-    public static void genSingle(ProtoInfo protoInfo){
-        String targetFileName = Utils.genDir +  Utils.upperFirst(Utils.beanName) + ".java";
-        String packStr = Utils.getPackageStr();
+    public static void genSingle(ProtoInfo protoInfo, File dir){
+        String targetFileName = dir.getAbsolutePath() + File.separator
+                + Utils.upperFirst(protoInfo.getPbName()) + ".java";
+        String packStr = protoInfo.getPackageName();
         String packAndImportStr = packStr +
                 "import java.util.*;\n" +
                 "import java.lang.*;\n";
         StringBuilder singleSb = new StringBuilder(packAndImportStr);
-        singleSb.append("public class ").append(Utils.beanName).append(" {\n\n");
+        singleSb.append("public class ").append(protoInfo.getPbName()).append(" {\n\n");
 
         protoInfo.getEnumMap().forEach((enumName,fieldInfos)->{
             //构建字符串
@@ -128,7 +132,7 @@ public class GenJavaBean {
             singleSb.append(enumCode).append("\n");
         });
 
-        protoInfo.getObjMap().forEach((objName,fieldInfos)->{
+        protoInfo.getMessageMap().forEach((objName,fieldInfos)->{
             //构建字符串
             String beanStart ="public static class "+objName+" {\n";
             StringBuilder fieldSb = new StringBuilder();
@@ -154,11 +158,7 @@ public class GenJavaBean {
             singleSb.append(beanCode).append("\n");
         });
         String code = singleSb + END;
-//        System.out.println("code:" + code);
-//        String formatCode = Utils.formatJavaCode(code);
-//        System.out.println("formatCode:" + formatCode);
-//        System.out.println("targetFileName:" + targetFileName);
-        Utils.write(targetFileName, code);
+        Utils.writeFileStr(new File(targetFileName), code);
     }
 
 

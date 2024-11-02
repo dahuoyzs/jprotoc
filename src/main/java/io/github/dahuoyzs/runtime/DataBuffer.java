@@ -1,7 +1,6 @@
 package io.github.dahuoyzs.runtime;
 
 
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,6 +22,9 @@ public class DataBuffer {
         this.buffer = bytes;
         this.byteLen = bytes.length;
         offset = 0;
+        if (!isProtobuf(bytes)) {
+            throw new IllegalArgumentException("not protobuf bytes");
+        }
     }
 
     public static DataBuffer of(byte[] bytes) {
@@ -40,7 +42,7 @@ public class DataBuffer {
             int tag = this.readRawVarInt32();
             int fieldNumber_new = getFieldNumber(tag);
             if (fieldNumber_new < fieldNumber) {//乱序了，后面的序号不应该大于前面的序号
-                System.err.printf("fieldNumber:%s,fieldNumber_new:%s%n", fieldNumber, fieldNumber_new);
+//                System.err.printf("fieldNumber:%s,fieldNumber_new:%s%n", fieldNumber, fieldNumber_new);
                 throw new IllegalArgumentException("not protobuf bytes error fieldNumber sort");
             }
             int nextFieldNumber = fieldNumber + 1;
@@ -49,7 +51,7 @@ public class DataBuffer {
             }
             fieldNumber = fieldNumber_new;
             if (fieldNumber < 1) {
-                System.out.printf("byteLen:%s,offset:%s,buffer:%s", byteLen, offset, Arrays.toString(buffer));
+//                System.err.printf("byteLen:%s,offset:%s,buffer:%s", byteLen, offset, Arrays.toString(buffer));
                 throw new IllegalArgumentException("not protobuf bytes error fieldNumber:" + fieldNumber);
             }
             int wireTypeVal = getWireType(tag);
@@ -106,7 +108,12 @@ public class DataBuffer {
         return PBFieldList;
     }
 
-    public TreeMap<String, Object> toObjTreeMap() {
+    /**
+     * 转为为map
+     *
+     * @return TreeMap map
+     */
+    public TreeMap<String, Object> toMap() {
         TreeMap<String, Object> objMap = new TreeMap<>();
         for (PBField pbField : toFieldList()) {
             handlerField(objMap, pbField);
@@ -114,7 +121,47 @@ public class DataBuffer {
         return objMap;
     }
 
-    public static void handlerField(TreeMap<String, Object> objMap, PBField pbField) {
+    /**
+     * 转化为目标对象
+     *
+     * @param clazz 目标对象
+     * @return T 目标对象
+     */
+    public <T> T toObject(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getConstructor();
+            T obj = constructor.newInstance();
+            for (PBField pbField : toFieldList()) {
+                handlerField(obj, pbField);
+            }
+            return obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+            //忽略
+            return null;
+        }
+    }
+
+
+    /**
+     * 给我一个字节数组,尝试判断是否为有效的protobuf数据
+     *
+     * @param bytes proto字节数组
+     * @return boolean 是否为protobuf数据
+     */
+    public static boolean isProtobuf(byte[] bytes) {
+        try {
+            DataBuffer dataBuffer = DataBuffer.of(bytes);
+            List<PBField> fieldList = dataBuffer.toFieldList();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    //处理protobuf字段 往map中设置
+    private static void handlerField(TreeMap<String, Object> objMap, PBField pbField) {
         WireType wireType = WireType.valueOf(pbField.getWireType());
         if (wireType == WireType.OBJ_STR && pbField.getVal() instanceof List) {
             List array = (List) pbField.getVal();
@@ -133,64 +180,49 @@ public class DataBuffer {
         }
     }
 
-    public <T> T toObj(Class<T> clazz) {
+    //处理protobuf字段 往类中设置
+    private static <T> void handlerField(T object, PBField pbField) {
         try {
-            Constructor<T> constructor = clazz.getConstructor();
-            T obj = constructor.newInstance();
-            for (PBField pbField : toFieldList()) {
-                handlerField(obj, pbField);
-            }
-            return obj;
-        } catch (Exception e) {
-            e.printStackTrace();
-            //忽略
-            return null;
-        }
-    }
-
-    public static <T> void handlerField(T obj, PBField pbField) {
-        try {
-            Field objField = obj.getClass().getDeclaredFields()[(int) pbField.getFieldNumber()-1];
+            Field objField = object.getClass().getDeclaredFields()[(int) pbField.getFieldNumber() - 1];
             objField.setAccessible(true);
             WireType wireType = WireType.valueOf(pbField.getWireType());
             if (wireType == WireType.OBJ_STR && pbField.getVal() instanceof List && !objField.getClass().isPrimitive()) {
                 List array = (List) pbField.getVal();
                 Object innerObj = objField.getType().getConstructor().newInstance();
-                for (Object object : array) {
-                    if (object instanceof PBField) {
-                        PBField field = (PBField) object;
+                for (Object obj : array) {
+                    if (obj instanceof PBField) {
+                        PBField field = (PBField) obj;
                         handlerField(innerObj, field);
                     }
                 }
-                objField.set(obj, innerObj);
+                objField.set(object, innerObj);
             } else {
                 Class<?> type = objField.getType();
                 if (boolean.class.equals(type) || Boolean.class.equals(type)) {
-                    objField.set(obj, "1".equals(pbField.getVal().toString()));
+                    objField.set(object, "1".equals(pbField.getVal().toString()));
                 } else if (byte.class.equals(type) || Byte.class.equals(type)) {
-                    objField.set(obj, Byte.parseByte(pbField.getVal().toString()));
+                    objField.set(object, Byte.parseByte(pbField.getVal().toString()));
                 } else if (char.class.equals(type) || Character.class.equals(type)) {
-                    objField.set(obj, pbField.getVal().toString().charAt(0));
+                    objField.set(object, pbField.getVal().toString().charAt(0));
                 } else if (short.class.equals(type) || Short.class.equals(type)) {
-                    objField.set(obj, Short.parseShort(pbField.getVal().toString()));
+                    objField.set(object, Short.parseShort(pbField.getVal().toString()));
                 } else if (int.class.equals(type) || Integer.class.equals(type)) {
-                    objField.set(obj, Integer.parseInt(pbField.getVal().toString()));
+                    objField.set(object, Integer.parseInt(pbField.getVal().toString()));
                 } else if (long.class.equals(type) || Long.class.equals(type)) {
-                    objField.set(obj, Long.parseLong(pbField.getVal().toString()));
+                    objField.set(object, Long.parseLong(pbField.getVal().toString()));
                 } else if (float.class.equals(type) || Float.class.equals(type)) {
-                    objField.set(obj, Float.parseFloat(pbField.getVal().toString()));
+                    objField.set(object, Float.parseFloat(pbField.getVal().toString()));
                 } else if (double.class.equals(type) || Double.class.equals(type)) {
-                    objField.set(obj, Double.parseDouble(pbField.getVal().toString()));
+                    objField.set(object, Double.parseDouble(pbField.getVal().toString()));
                 } else if (String.class.equals(type)) {
-                    objField.set(obj, pbField.getVal().toString());
-                }
-                else if (type.isEnum()) {
-                    objField.set(obj, Enum.valueOf((Class<Enum>) type, pbField.getVal().toString()));
+                    objField.set(object, pbField.getVal().toString());
+                } else if (type.isEnum()) {
+                    objField.set(object, Enum.valueOf((Class<Enum>) type, pbField.getVal().toString()));
                 } else if (type.isArray()) {
-                    objField.set(obj, pbField.getVal());
+                    objField.set(object, pbField.getVal());
                 } else {
                     if (List.class.isAssignableFrom(type)) {
-                        List list = (List) objField.get(obj);
+                        List list = (List) objField.get(object);
                         Type genericType = objField.getGenericType();
                         if (genericType instanceof ParameterizedType) {// 如果是泛型参数的类型
                             ParameterizedType pt = (ParameterizedType) genericType;
@@ -218,9 +250,9 @@ public class DataBuffer {
                                 list.add(pbField.getVal().toString());
                             }
                         }
-                        objField.set(obj, list);
+                        objField.set(object, list);
                     } else {
-                        objField.set(obj, pbField.getVal());
+                        objField.set(object, pbField.getVal());
                     }
                 }
             }
@@ -229,7 +261,6 @@ public class DataBuffer {
             return;
         }
     }
-
 
     private static boolean debug = false;
 
