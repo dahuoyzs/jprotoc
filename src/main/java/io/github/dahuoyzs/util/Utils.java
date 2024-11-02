@@ -12,21 +12,21 @@ public class Utils {
 
     public static HashMap<String, String> pb2JavaMap = new HashMap<>();
     static {
-        pb2JavaMap.put("double", "double");
-        pb2JavaMap.put("float", "float");
-        pb2JavaMap.put("bool", "boolean");
+        pb2JavaMap.put("double", "Double");
+        pb2JavaMap.put("float", "Float");
+        pb2JavaMap.put("bool", "Boolean");
         pb2JavaMap.put("string", "String");
-        pb2JavaMap.put("bytes", "byte[]");
-        pb2JavaMap.put("int32", "int");
-        pb2JavaMap.put("int64", "long");
-        pb2JavaMap.put("uint32", "int");
-        pb2JavaMap.put("uint64", "long");
-        pb2JavaMap.put("sint32", "int");
-        pb2JavaMap.put("sint64", "long");
-        pb2JavaMap.put("fixed32", "int");
-        pb2JavaMap.put("fixed64", "long");
-        pb2JavaMap.put("sfixed32", "int");
-        pb2JavaMap.put("sfixed64", "long");
+        pb2JavaMap.put("bytes", "Byte[]");
+        pb2JavaMap.put("int32", "Integer");
+        pb2JavaMap.put("int64", "Long");
+        pb2JavaMap.put("uint32", "Integer");
+        pb2JavaMap.put("uint64", "Long");
+        pb2JavaMap.put("sint32", "Integer");
+        pb2JavaMap.put("sint64", "Long");
+        pb2JavaMap.put("fixed32", "Integer");
+        pb2JavaMap.put("fixed64", "Long");
+        pb2JavaMap.put("sfixed32", "Integer");
+        pb2JavaMap.put("sfixed64", "Long");
     }
 
     /**

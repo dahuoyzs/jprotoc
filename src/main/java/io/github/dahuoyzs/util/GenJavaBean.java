@@ -36,20 +36,27 @@ public class GenJavaBean {
 
     //生成代码
     public static void gen(ProtoInfo protoInfo, File dir) {
-        String java_multiple_files = protoInfo.getOptionMap().getOrDefault("java_multiple_files", "false");
-        if ("true".equals(java_multiple_files)) {//多文件
-            genMultiple(protoInfo,dir);
-        } else {//单文件
-            genSingle(protoInfo, dir);
+        try {
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String java_multiple_files = protoInfo.getOptionMap().getOrDefault("java_multiple_files", "false");
+            if ("true".equals(java_multiple_files)) {//多文件
+                genMultiple(protoInfo,dir);
+            } else {//单文件
+                genSingle(protoInfo, dir);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     //生成多文件代码
     public static void genMultiple(ProtoInfo protoInfo, File dir){
-        String packStr = protoInfo.getPackageName();
+        String packStr = getPackStr(protoInfo);
         String importStr = "import java.util.*;\n" +
-                "import java.lang.*;\n" +
-                "import io.protostuff.Tag;\n";
+                "import java.lang.*;\n" ;
+//                "import io.protostuff.Tag;\n";
         //多文件
         protoInfo.getEnumMap().forEach((enumName,fieldInfos)->{
             //构建字符串
@@ -63,7 +70,8 @@ public class GenJavaBean {
             String enumMethod = String.format(enumMethodTlp, enumName);
             String enumCode = enumStart + fieldSb + enumMethod + END;
             //代码生成
-            String code = packStr + enumCode;
+            String code = "package " + packStr + ";\n"
+                    + enumCode;
             String targetFileName = dir.getAbsolutePath() + File.separator
                     + Utils.upperFirst(enumName) + ".java";
 //            System.out.println("code:" + code);
@@ -97,7 +105,8 @@ public class GenJavaBean {
             String beanCode = beanStart + fieldSb + methodSb + END;
 
             //代码生成
-            String code = packStr + importStr + beanCode;
+            String code = "package " + packStr + ";\n" +
+                    importStr + beanCode;
             String targetFileName = dir.getAbsolutePath() + File.separator
                     + Utils.upperFirst(objName) + ".java";
 //            System.out.println("code:" + code);
@@ -108,14 +117,15 @@ public class GenJavaBean {
 
     //生成单文件代码
     public static void genSingle(ProtoInfo protoInfo, File dir){
+        String name = Utils.upperFirst(protoInfo.getPbName()).replace(".proto", "");
         String targetFileName = dir.getAbsolutePath() + File.separator
-                + Utils.upperFirst(protoInfo.getPbName()) + ".java";
-        String packStr = protoInfo.getPackageName();
-        String packAndImportStr = packStr +
+                + name + ".java";
+        String packStr = getPackStr(protoInfo);
+        String packAndImportStr = "package " + packStr + ";\n" +
                 "import java.util.*;\n" +
                 "import java.lang.*;\n";
         StringBuilder singleSb = new StringBuilder(packAndImportStr);
-        singleSb.append("public class ").append(protoInfo.getPbName()).append(" {\n\n");
+        singleSb.append("public class ").append(name).append(" {\n\n");
 
         protoInfo.getEnumMap().forEach((enumName,fieldInfos)->{
             //构建字符串
@@ -161,5 +171,18 @@ public class GenJavaBean {
         Utils.writeFileStr(new File(targetFileName), code);
     }
 
+
+    public static String getPackStr(ProtoInfo protoInfo) {
+        String packStr = protoInfo.getPackageName();
+        String java_package = protoInfo.getOptionMap().get("java_package");
+        if (java_package != null) {
+            if (java_package.startsWith("\"") && java_package.endsWith("\"")) {
+                packStr = java_package.substring(1, java_package.length() - 1);
+            } else {
+                packStr = java_package;
+            }
+        }
+        return packStr;
+    }
 
 }
