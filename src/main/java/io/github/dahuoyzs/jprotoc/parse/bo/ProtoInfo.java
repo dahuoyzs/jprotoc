@@ -1,4 +1,4 @@
-package io.github.dahuoyzs.parse.bo;
+package io.github.dahuoyzs.jprotoc.parse.bo;
 
 
 import java.util.HashMap;
@@ -7,16 +7,13 @@ import java.util.Map;
 
 public class ProtoInfo {
 
-    String pbName = "xxx";
+    //文件名
+    String pbName = "";
     //syntax
     String syntax = "proto3";//默认proto3
     //package
     String packageName = "";//pb缺省时 默认空包名
 
-    //option
-//    String optimize_for = "SPEED";//pb缺省时 默认速度模式
-//    String java_outer_classname = "";//pb缺省时 默认文件名首字母大写
-//    Boolean java_multiple_files = false;//pb缺省时 默认单文件
     Map<String, String> optionMap = new HashMap<>();
     Map<String, List<FieldInfo>> messageMap = new HashMap<>();
     Map<String, List<FieldInfo>> enumMap = new HashMap<>();

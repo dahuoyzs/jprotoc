@@ -1,4 +1,4 @@
-package io.github.dahuoyzs.parse.bo;
+package io.github.dahuoyzs.jprotoc.parse.bo;
 
 
 public class FieldInfo {

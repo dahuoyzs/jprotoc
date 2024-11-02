@@ -1,16 +1,16 @@
-package io.github.dahuoyzs.parse;
+package io.github.dahuoyzs.jprotoc.parse;
 
-import io.github.dahuoyzs.jprotoc.protobuf3.Protobuf3BaseListener;
-import io.github.dahuoyzs.jprotoc.protobuf3.Protobuf3Parser;
-import io.github.dahuoyzs.parse.bo.FieldInfo;
-import io.github.dahuoyzs.parse.bo.ProtoInfo;
+
+import io.github.dahuoyzs.jprotoc.parse.bo.FieldInfo;
+import io.github.dahuoyzs.jprotoc.parse.bo.ProtoInfo;
+import io.github.dahuoyzs.jprotoc.protobuf2.Protobuf2BaseListener;
+import io.github.dahuoyzs.jprotoc.protobuf2.Protobuf2Parser;
 import io.github.dahuoyzs.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtoListener extends Protobuf3BaseListener {
-
+public class Proto2Listener extends Protobuf2BaseListener {
 
     private ProtoInfo protoInfo = new ProtoInfo();
     private List<FieldInfo> currFields = new ArrayList<>();
@@ -31,40 +31,38 @@ public class ProtoListener extends Protobuf3BaseListener {
         this.currFields = currFields;
     }
 
-
-
     @Override
-    public void enterProto(Protobuf3Parser.ProtoContext ctx) {
+    public void enterProto(Protobuf2Parser.ProtoContext ctx) {
         protoInfo = new ProtoInfo();//每次进入保证是新的对象，防止老数据影响新数据
     }
 
 
     @Override
-    public void enterPackageStatement(Protobuf3Parser.PackageStatementContext ctx) {
+    public void enterPackageStatement(Protobuf2Parser.PackageStatementContext ctx) {
 //        System.out.println(ctx.fullIdent().getText());
         String pbPackageName = ctx.fullIdent().getText();
         protoInfo.setPackageName(pbPackageName);
     }
 
     @Override
-    public void enterOptionStatement(Protobuf3Parser.OptionStatementContext ctx) {
+    public void enterOptionStatement(Protobuf2Parser.OptionStatementContext ctx) {
 //        System.out.println(ctx.OPTION().getText() + " " + ctx.optionName().getText() + " = " + ctx.constant().getText());
         protoInfo.getOptionMap().put(ctx.optionName().getText(), ctx.constant().getText());
     }
 
     @Override
-    public void enterMessageDef(Protobuf3Parser.MessageDefContext ctx) {
+    public void enterMessageDef(Protobuf2Parser.MessageDefContext ctx) {
         currFields = protoInfo.getMessageMap().getOrDefault(ctx.messageName().getText(), new ArrayList<>());
     }
 
     @Override
-    public void exitMessageDef(Protobuf3Parser.MessageDefContext ctx) {
+    public void exitMessageDef(Protobuf2Parser.MessageDefContext ctx) {
         protoInfo.getMessageMap().put(ctx.messageName().getText(), currFields);
     }
 
     //基本类型，数字类型和字符串类型字段
     @Override
-    public void enterField(Protobuf3Parser.FieldContext ctx) {
+    public void enterField(Protobuf2Parser.FieldContext ctx) {
         if (ctx.type_() != null && ctx.fieldName() != null && ctx.fieldNumber() != null) {
             //收集字段
             FieldInfo fieldInfo = new FieldInfo();
@@ -88,7 +86,7 @@ public class ProtoListener extends Protobuf3BaseListener {
 
     //map类型
     @Override
-    public void enterMapField(Protobuf3Parser.MapFieldContext ctx) {
+    public void enterMapField(Protobuf2Parser.MapFieldContext ctx) {
         if (ctx.MAP() != null && ctx.keyType() != null && ctx.type_() != null && ctx.mapName() != null && ctx.fieldNumber() != null) {
             //收集字段
             FieldInfo fieldInfo = new FieldInfo();
@@ -110,19 +108,19 @@ public class ProtoListener extends Protobuf3BaseListener {
     }
 
     @Override
-    public void enterEnumDef(Protobuf3Parser.EnumDefContext ctx) {
+    public void enterEnumDef(Protobuf2Parser.EnumDefContext ctx) {
         currFields = protoInfo.getEnumMap().getOrDefault(ctx.enumName().getText(), new ArrayList<>());
     }
 
 
     @Override
-    public void exitEnumDef(Protobuf3Parser.EnumDefContext ctx) {
+    public void exitEnumDef(Protobuf2Parser.EnumDefContext ctx) {
         protoInfo.getEnumMap().put(ctx.enumName().getText(), currFields);
     }
 
     //枚举类型
     @Override
-    public void enterEnumField(Protobuf3Parser.EnumFieldContext ctx) {
+    public void enterEnumField(Protobuf2Parser.EnumFieldContext ctx) {
         if (ctx.ident() != null && ctx.intLit() != null) {
             //收集字段
             FieldInfo fieldInfo = new FieldInfo();
@@ -136,5 +134,4 @@ public class ProtoListener extends Protobuf3BaseListener {
             currFields.add(fieldInfo);
         }
     }
-
 }

@@ -1,5 +1,11 @@
 package io.github.dahuoyzs.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 
 public class Utils {
@@ -54,6 +60,37 @@ public class Utils {
             }
         }
         return result.toString();
+    }
+
+
+    /**
+     * 从文件中读取字符串
+     *
+     * @param protoFile proto文件
+     * @return String 文件内容
+     */
+    public static String readFileStr(File protoFile) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(protoFile.getAbsolutePath())),"UTF-8");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 从文件中读取字符串
+     *
+     * @param targetFile 目标文件
+     * @param content 文件内容
+     */
+    public static void writeFileStr(File targetFile, String content) {
+        try {
+            Path path = Paths.get(targetFile.getAbsolutePath());
+            Files.write(path, content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
 
 }
