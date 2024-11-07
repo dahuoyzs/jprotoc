@@ -1,7 +1,7 @@
 syntax = "proto3";
 package proto;
 //option java_multiple_files = true;
-option java_package = "com.dmx.pb.wzdj";
+option java_package = "com.bigfire.reverse.wzdj.pojo.srcVo";
 option java_outer_classname = "wzdj";
 
 

@@ -6,12 +6,12 @@ import io.github.dahuoyzs.jprotoc.parse.bo.ProtoInfo;
 
 import java.io.File;
 
-public class GenJavaBean {
+public class GenStuffBeanLomBok {
 
     //enum模板
-    private static String enumStartTlp = "public enum %s  {\n";
-    private static String enumFieldTlp = "    %s(%s),\n";
-    private static String enumMethodTlp = "    ;\n" +
+    public static String enumStartTlp = "public enum %s  {\n";
+    public static String enumFieldTlp = "    %s(%s),\n";
+    public static String enumMethodTlp = "    ;\n" +
             "    private int value;\n" +
             "\n" +
             "    private %s(int value) {\n" +
@@ -22,17 +22,12 @@ public class GenJavaBean {
             "      return value;\n" +
             "    }\n";
     //class模板
-    private static String beanStartTlp = "public class %s  {\n";
-    private static String beanFieldTlp = "    %s %s;\n";
-    private static String beanGetMethodTlp = "    public %s get%s() {\n" +
-            "        return %s;\n" +
-            "    }\n";
-    private static String beanSetMethodTlp = "    public void set%s(%s %s) {\n" +
-            "        this.%s = %s;\n" +
-            "    }\n";
+    public static String beanStartTlp = "@Data\n@NoArgsConstructor\n@ProtobufClass\npublic static class %s  {\n";
+    public static String tagAnnotationTlp = "    @Tag(%s)\n";
+    public static String beanFieldTlp = "    %s %s;\n";
 
     //end
-    private static String END = "}\n";
+    public static String END = "}\n";
 
     //生成代码
     public static void gen(ProtoInfo protoInfo, File dir) {
@@ -53,10 +48,14 @@ public class GenJavaBean {
 
     //生成多文件代码
     public static void genMultiple(ProtoInfo protoInfo, File dir){
+
         String packStr = getPackStr(protoInfo);
         String importStr = "import java.util.*;\n" +
-                "import java.lang.*;\n" ;
-//                "import io.protostuff.Tag;\n";
+                "import java.lang.*;\n" +
+                "import io.protostuff.Tag;\n"+
+                "import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n"+
+                "import lombok.*;\n";
+
         //多文件
         protoInfo.getEnumMap().forEach((enumName,fieldInfos)->{
             //构建字符串
@@ -74,8 +73,6 @@ public class GenJavaBean {
                     + enumCode;
             String targetFileName = dir.getAbsolutePath() + File.separator
                     + Utils.upperFirst(enumName) + ".java";
-//            System.out.println("code:" + code);
-//            System.out.println("targetFileName:" + targetFileName);
             Utils.writeFileStr(new File(targetFileName), code);
         });
 
@@ -91,18 +88,12 @@ public class GenJavaBean {
                 } else if (fieldInfo.getBeanType().contains("java.util.Map") || fieldInfo.getBeanType().startsWith("Map")) {
                     fieldName += " = new java.util.HashMap<>()";
                 }
+
+                fieldSb.append(String.format(tagAnnotationTlp, fieldInfo.getPbNumber()));//@Tag
                 fieldSb.append(String.format(beanFieldTlp, fieldInfo.getBeanType(), fieldName));
             }
 
-            StringBuilder methodSb = new StringBuilder();
-            for (FieldInfo fieldInfo : fieldInfos) {
-                String type = fieldInfo.getBeanType();
-                String fieldName = fieldInfo.getBeanName();
-                String upFieldName = Utils.upperFirst(fieldInfo.getBeanName());
-                methodSb.append(String.format(beanGetMethodTlp, type, upFieldName, fieldName));
-                methodSb.append(String.format(beanSetMethodTlp, upFieldName, type, fieldName, fieldName, fieldName));
-            }
-            String beanCode = beanStart + fieldSb + methodSb + END;
+            String beanCode = beanStart + fieldSb  + END;
 
             //代码生成
             String code = "package " + packStr + ";\n" +
@@ -121,7 +112,9 @@ public class GenJavaBean {
         String packStr = getPackStr(protoInfo);
         String packAndImportStr = "package " + packStr + ";\n" +
                 "import java.util.*;\n" +
-                "import java.lang.*;\n";
+                "import java.lang.*;\n" +
+                "import io.protostuff.Tag;\n"+
+                "import lombok.*;\n";
         StringBuilder singleSb = new StringBuilder(packAndImportStr);
         singleSb.append("public class ").append(name).append(" {\n\n");
 
@@ -142,7 +135,8 @@ public class GenJavaBean {
 
         protoInfo.getMessageMap().forEach((objName,fieldInfos)->{
             //构建字符串
-            String beanStart ="public static class "+objName+" {\n";
+            String beanStart = String.format(beanStartTlp, objName);
+
             StringBuilder fieldSb = new StringBuilder();
             for (FieldInfo fieldInfo : fieldInfos) {
                 String fieldName = fieldInfo.getBeanName();
@@ -151,18 +145,12 @@ public class GenJavaBean {
                 } else if (fieldInfo.getBeanType().contains("java.util.Map") || fieldInfo.getBeanType().startsWith("Map")) {
                     fieldName += " = new java.util.HashMap<>()";
                 }
+
+                fieldSb.append(String.format(tagAnnotationTlp, fieldInfo.getPbNumber()));//@Tag
                 fieldSb.append(String.format(beanFieldTlp, fieldInfo.getBeanType(), fieldName));
             }
 
-            StringBuilder methodSb = new StringBuilder();
-            for (FieldInfo fieldInfo : fieldInfos) {
-                String type = fieldInfo.getBeanType();
-                String fieldName = fieldInfo.getBeanName();
-                String upFieldName = Utils.upperFirst(fieldInfo.getBeanName());
-                methodSb.append(String.format(beanGetMethodTlp, type, upFieldName, fieldName));
-                methodSb.append(String.format(beanSetMethodTlp, upFieldName, type, fieldName, fieldName, fieldName));
-            }
-            String beanCode = beanStart + fieldSb + methodSb + END;
+            String beanCode = beanStart + fieldSb + END;
             singleSb.append(beanCode).append("\n");
         });
         String code = singleSb + END;
@@ -182,5 +170,4 @@ public class GenJavaBean {
         }
         return packStr;
     }
-
 }
