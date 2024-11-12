@@ -1,6 +1,7 @@
 syntax = "proto3";
 package proto;
-//option java_multiple_files = true;
+
+option java_multiple_files = false;
 option java_package = "com.bigfire.reverse.wzdj.pojo.srcVo";
 option java_outer_classname = "wzdj";
 
@@ -53,11 +54,6 @@ message RpcServerItemUse {
     int64 amount = 2;
 }
 
-message RpcServerItemManySelectOne {
-    string item = 1;
-    repeated string select = 2;
-}
-
 message RpcClientCommonRewardAdd {
     repeated RewardInfo rewards = 1;
     repeated PackInfo packs = 2;
@@ -68,6 +64,11 @@ message RpcClientCommonRewardAdd {
 message RpcClientEnergy {
     int32 energy = 1;
     int32 next = 2;
+}
+
+message RpcServerSelectOptionalBoxReward {
+    string key = 1;
+    repeated string selectList = 2;
 }
 
 
@@ -1392,18 +1393,20 @@ message MatchPlayerData {
 message StageRewardData {
     int32 stage = 1;
     repeated int32 status = 2;
+    int32 periodStatus = 3;
 }
 
 message RpcServerStageRewardGet {
     int32 battleType = 1;
     int32 stage = 2;
-    int32 sIndex = 3;
 }
 
 message RpcClientStageInfo {
     int32 battleType = 1;
     repeated StageRewardData coop = 2;
     repeated StageRewardData coopHard = 3;
+    int32 coopPeriodRefreshTime = 4;
+    int32 coopHardPeriodRefreshTime = 5;
 }
 
 message FightResultPlayerData {
@@ -2135,6 +2138,53 @@ message RpcServerLightLampLotteryRowReward {
 message RpcServerLightLampLotteryColReward {
     int32 actId = 1;
     int32 colRewardId = 2;
+}
+
+message GuaranteeLotteryData {
+    int64 ticketNum = 1;
+    int64 rockerNum = 2;
+    int32 lotteryTimes = 3;
+    int32 bigRewardIdx = 4;
+    int32 guaranteeTimes = 5;
+    int32 hitBigRewardCnt = 6;
+    map<int32, int32> timesRewardsStatus = 7;
+}
+
+message RpcServerGuaranteeLotteryInfo {
+    int32 actId = 1;
+}
+
+message RpcClientGuaranteeLotteryInfo {
+    int32 actId = 1;
+    int64 endTime = 2;
+    GuaranteeLotteryData data = 3;
+}
+
+message RpcServerGuaranteeLottery {
+    int32 actId = 1;
+    int32 lotteryTimes = 2;
+}
+
+message RpcClientGuaranteeLottery {
+    int32 actId = 1;
+    GuaranteeLotteryData data = 2;
+    repeated int32 rewardIds = 3;
+}
+
+message RpcServerGuaranteeLotteryChooseReward {
+    int32 actId = 1;
+    int32 bigRewardIdx = 2;
+}
+
+message RpcClientGuaranteeLotteryItemsUpdate {
+    int32 actId = 1;
+    int64 ticketNum = 2;
+    int64 rockerNum = 3;
+}
+
+message RpcServerGuaranteeLotteryTimesReward {
+    int32 actId = 1;
+    int32 timesId = 2;
 }
 
 
