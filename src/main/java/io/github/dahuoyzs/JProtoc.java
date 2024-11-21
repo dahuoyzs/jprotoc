@@ -7,6 +7,7 @@ import io.github.dahuoyzs.jprotoc.protobuf3.Protobuf3Parser;
 import io.github.dahuoyzs.jprotoc.parse.Proto2Listener;
 import io.github.dahuoyzs.jprotoc.parse.Proto3Listener;
 import io.github.dahuoyzs.jprotoc.parse.bo.ProtoInfo;
+import io.github.dahuoyzs.util.GenJavaBean;
 import io.github.dahuoyzs.util.GenStuffBeanLomBok;
 import io.github.dahuoyzs.util.Utils;
 import org.antlr.v4.runtime.CharStreams;
@@ -109,11 +110,21 @@ public class JProtoc {
         return protoInfo;
     }
 
+
+    //gen java bean
     public static void genJavaBeanByProtoStr(String protoStr, File javaBeanDir) {
-        GenStuffBeanLomBok.gen(loadByStr(protoStr), javaBeanDir);
+        GenJavaBean.gen(loadByStr(protoStr), javaBeanDir);
     }
 
     public static void genJavaBeanByProtoFile(File protoFile, File javaBeanDir) {
+        GenJavaBean.gen(loadByFile(protoFile), javaBeanDir);
+    }
+
+    public static void genJavaBeanByProtoStrLombok(String protoStr, File javaBeanDir) {
+        GenStuffBeanLomBok.gen(loadByStr(protoStr), javaBeanDir);
+    }
+
+    public static void genJavaBeanByProtoFileLombok(File protoFile, File javaBeanDir) {
         GenStuffBeanLomBok.gen(loadByFile(protoFile), javaBeanDir);
     }
 

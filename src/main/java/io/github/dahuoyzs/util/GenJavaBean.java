@@ -115,7 +115,11 @@ public class GenJavaBean {
 
     //生成单文件代码
     public static void genSingle(ProtoInfo protoInfo, File dir){
-        String name = Utils.upperFirst(protoInfo.getPbName()).replace(".proto", "");
+        String pName = protoInfo.getOptionMap().getOrDefault("java_outer_classname", protoInfo.getPbName());
+        if (pName.equals(".proto")) {
+            pName = pName.replace(".proto", "");
+        }
+        String name = Utils.upperFirst(pName);
         String targetFileName = dir.getAbsolutePath() + File.separator
                 + name + ".java";
         String packStr = getPackStr(protoInfo);
@@ -171,16 +175,7 @@ public class GenJavaBean {
 
 
     public static String getPackStr(ProtoInfo protoInfo) {
-        String packStr = protoInfo.getPackageName();
-        String java_package = protoInfo.getOptionMap().get("java_package");
-        if (java_package != null) {
-            if (java_package.startsWith("\"") && java_package.endsWith("\"")) {
-                packStr = java_package.substring(1, java_package.length() - 1);
-            } else {
-                packStr = java_package;
-            }
-        }
-        return packStr;
+        return protoInfo.getOptionMap().getOrDefault("java_package",protoInfo.getPackageName());
     }
 
 }

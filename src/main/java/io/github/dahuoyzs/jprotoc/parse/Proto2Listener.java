@@ -47,7 +47,11 @@ public class Proto2Listener extends Protobuf2BaseListener {
     @Override
     public void enterOptionStatement(Protobuf2Parser.OptionStatementContext ctx) {
 //        System.out.println(ctx.OPTION().getText() + " " + ctx.optionName().getText() + " = " + ctx.constant().getText());
-        protoInfo.getOptionMap().put(ctx.optionName().getText(), ctx.constant().getText());
+        String text = ctx.constant().getText();
+        if (text != null && text.startsWith("\"") && text.endsWith("\"")) {
+            text = text.substring(1, text.length() - 1);
+        }
+        protoInfo.getOptionMap().put(ctx.optionName().getText(), text);
     }
 
     @Override

@@ -106,14 +106,19 @@ public class GenStuffBeanLomBok {
 
     //生成单文件代码
     public static void genSingle(ProtoInfo protoInfo, File dir){
-        String name = Utils.upperFirst(protoInfo.getPbName()).replace(".proto", "");
+        String pName = protoInfo.getOptionMap().getOrDefault("java_outer_classname", protoInfo.getPbName());
+        if (pName.equals(".proto")) {
+            pName = pName.replace(".proto", "");
+        }
+        String name = Utils.upperFirst(pName);
         String targetFileName = dir.getAbsolutePath() + File.separator
                 + name + ".java";
         String packStr = getPackStr(protoInfo);
         String packAndImportStr = "package " + packStr + ";\n" +
                 "import java.util.*;\n" +
                 "import java.lang.*;\n" +
-                "import io.protostuff.Tag;\n"+
+                "import io.protostuff.Tag;\n" +
+                "import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;\n" +
                 "import lombok.*;\n";
         StringBuilder singleSb = new StringBuilder(packAndImportStr);
         singleSb.append("public class ").append(name).append(" {\n\n");
@@ -159,15 +164,7 @@ public class GenStuffBeanLomBok {
 
 
     public static String getPackStr(ProtoInfo protoInfo) {
-        String packStr = protoInfo.getPackageName();
-        String java_package = protoInfo.getOptionMap().get("java_package");
-        if (java_package != null) {
-            if (java_package.startsWith("\"") && java_package.endsWith("\"")) {
-                packStr = java_package.substring(1, java_package.length() - 1);
-            } else {
-                packStr = java_package;
-            }
-        }
-        return packStr;
+        return protoInfo.getOptionMap().getOrDefault("java_package",protoInfo.getPackageName());
     }
+
 }
